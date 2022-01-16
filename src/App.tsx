@@ -1,24 +1,32 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-
+// import Like from './Like/Like';
+import {useState } from 'react';
+import {useSelector, useDispatch} from 'react-redux'
+import {State} from './redux/configStore'
+import {Action} from './redux/actions/index'
+import * as actionCreator from './redux/action-creator'
+import { bindActionCreators } from 'redux';
 function App() {
+
+  const state = useSelector((state: State)=> state.counterReducer)
+  const disPatch = useDispatch();
+  const {decre,incre} =  bindActionCreators(actionCreator,disPatch)
+
+  console.log('state',state)
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+       Count: {state.number}
+      <button onClick={() => {
+          disPatch({
+            type: 'decre'
+          })
+
+      }}>-</button>
+      <button onClick={() =>{
+          disPatch({
+            type: 'incre'
+          })
+      }}>+</button>
     </div>
   );
 }
