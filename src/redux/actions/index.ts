@@ -1,5 +1,6 @@
 interface Decrement{
         type: 'decre',
+        // payload: number
     
 }
 

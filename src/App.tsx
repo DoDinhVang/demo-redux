@@ -1,34 +1,39 @@
 import React from 'react';
-// import Like from './Like/Like';
-import {useState } from 'react';
-import {useSelector, useDispatch} from 'react-redux'
-import {State} from './redux/configStore'
-import {Action} from './redux/actions/index'
-import * as actionCreator from './redux/action-creator'
-import { bindActionCreators } from 'redux';
-function App() {
+import Like from './Like/Like';
 
-  const state = useSelector((state: State)=> state.counterReducer)
-  const disPatch = useDispatch();
-  const {decre,incre} =  bindActionCreators(actionCreator,disPatch)
+import withFirebaseAuth from 'react-with-firebase-auth'
+import firebase from 'firebase/app';
+import firebaseConfig from './fireBaseConfig';
+import 'firebase/auth'
 
-  console.log('state',state)
+function App(props:any) {
+  const {
+    user,
+    signOut,
+    signInWithGoogle,
+  } = props;
+
+  console.log(user)
   return (
-    <div>
-       Count: {state.number}
-      <button onClick={() => {
-          disPatch({
-            type: 'decre'
-          })
 
-      }}>-</button>
-      <button onClick={() =>{
-          disPatch({
-            type: 'incre'
-          })
-      }}>+</button>
+
+    <div>
+      {user? <Like />: 
+       <div style={{display: 'flex'}}>
+            <button style={{marginRight: '40px'}} onClick={signInWithGoogle}>Sign in with Google</button>
+            <button onClick={signOut}>or Sign out</button>
+       </div>}
+    
+     
     </div>
   );
 }
-
-export default App;
+const firebaseApp = firebase.initializeApp(firebaseConfig)
+const firebaseAppAuth = firebaseApp.auth()
+const providers = {
+  googleProvider: new firebase.auth.GoogleAuthProvider(),
+}
+export default withFirebaseAuth({
+  providers,
+  firebaseAppAuth,
+})(App);
